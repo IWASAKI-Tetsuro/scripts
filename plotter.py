@@ -1,31 +1,18 @@
 #! /bin/python3
 
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import sys
-import argparse
-from io import StringIO
 
-def df_from_arg_or_stdin(args):
-    if sys.stdin.isatty() == 0:
-        if (len(args) > 1):
-            print("arguments and stdin are provided")
-            sys.exit(1)
-        else:
-            csv_data = sys.stdin.read()
-            df = pd.read_csv(StringIO(csv_data))
+def DataFrameFromStdinOrArgs(file=None, delimiter=',', index=True):
+    ignore_index = not index
+
+    if(file is not None):
+        df = pd.read(file, delimiter=delimiter, ignore_index=ignore_index)
     else:
-        if (len(args) > 2):
-            print("Too many arguments")
-            sys.exit(1)
-        elif (len(args) == 1):
-            print("No input file provided and no data in stdin.")
-            sys.exit(1)
-        else:
-            csv_data = args[1]
-            df = pd.read_csv(csv_data)
     return df
+
 
 def plot_2data(df):
     x = df.iloc[:,0].values
@@ -98,10 +85,12 @@ def plot_3data(df):
     plt.savefig('output_3data.svg', bbox_inches='tight', pad_inches=0.05)
 
 def main(args):
-    df = df_from_arg_or_stdin(args)
+    args = sys.argv
+    df = DataFrameFromStdinOrArgs(file=None, delimiter=',', index=True)
     #plot_2data(df)
     #plot_3data(df)
 
 if __name__ == "__main__":
-    args = sys.argv
-    main(args)
+    main()
+
+    

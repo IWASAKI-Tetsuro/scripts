@@ -1,18 +1,18 @@
 #! /bin/bash
 
-svgfiles=(`ls -1 ./ | grep "\.svg$"`)
-length=${#svgfiles[@]}
-count=0
+while read line; do
+filename=`echo ${line} | sed "s/\.svg$//g"`
 
-for svgfile in "${svgfiles[@]}"; do
-  count=`expr $count + 1`
-  filename=`echo ${svgfile} | sed 's/\.svg$//'`
-
-if [ ! -f ./${filename}.pdf ]; then
-	LC_ALL=C inkscape ${filename}.svg -D --export-type=pdf --export-filename=${filename}.pdf
-  echo "${count}/${length} ${filename}.svg -> ${filename}.pdf"
-else
-  echo "${count}/${length} ${filename}.pdf already exists."
-fi
+  if [[ $line =~ \.svg$ ]]; then
+    if [ "${filename}.pdf" -nt "${filename}.svg" ]; then
+      echo "Nothing to do for ${filename}.svg"
+    fi
+    if [ ! -e ${filename}.pdf ] || [ "${filename}.pdf" -ot "${filename}.svg" ]; then
+      echo "${filename}.svg -> ${filename}.pdf"
+  	  LC_ALL=C inkscape ${filename}.svg -D --export-type=pdf --export-filename=${filename}.pdf
+    fi
+  else
+    echo "${filename} is not an SVG file."
+  fi
 
 done
