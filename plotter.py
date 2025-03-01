@@ -32,13 +32,13 @@ class Plotter:
     def setup(self, ax):
         ax.minorticks_on()
         ax.tick_params(axis='x', labelsize=15, direction='in',
-                       top=True, bottom=True, width=1.5, length=5.5)
+                       top=True, bottom=True, width=1.8, length=5.5)
         ax.tick_params(axis='y', labelsize=15, direction='in',
-                       left=True, right=True, width=1.5, length=5.5)
+                       left=True, right=True, width=1.8, length=5.5)
         ax.tick_params(axis='x', which='minor', direction='in',
-                       top=True, bottom=True, width=1.0, length=3.5)
+                       top=True, bottom=True, width=1.2, length=3.5)
         ax.tick_params(axis='y', which='minor', direction='in',
-                       left=True, right=True, width=1.0, length=3.5)
+                       left=True, right=True, width=1.2, length=3.5)
         ax.spines['top'].set_linewidth(1.8)
         ax.spines['bottom'].set_linewidth(1.8)
         ax.spines['right'].set_linewidth(1.8)
@@ -63,14 +63,17 @@ class Plotter:
         self.ax_list.append(ax)
         return ax
 
-    def plot_2D(self, x, y, label=None, style='b-', linewidth=2, ax=None,
+    def plot_2D(self, x, y, label=None, style=None, linewidth=2, ax=None,
                 xlim=None, ylim=None, margin=None):
         if ax is None:
             if not self.ax_list:
                 raise RuntimeError("No Axes available. Call add_subplot() first.")
             ax = self.ax_list[-1]
 
-        ax.plot(x, y, style, label=label, linewidth=linewidth)
+        if style is not None:
+            ax.plot(x, y, style, label=label, linewidth=linewidth)
+        else:
+            ax.plot(x, y, label=label, linewidth=linewidth)
 
         if xlim is not None:
             ax.set_xlim(xlim)
